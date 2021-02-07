@@ -1,0 +1,18 @@
+name: 'Futureland Publish Commit'
+description: 'Publish a commit message to a Futureland Journal'
+inputs:
+  publish-to:  
+    description: 'The journal to publish to on Futureland'
+    required: true
+    default: ''
+  publish-message:  
+    description: 'The message to publish'
+    required: true
+    default: 'A commit was pushed!'
+  fl-credential:  
+    description: 'A JWT for your FL account'
+    required: true
+    default: ''
+runs:
+  using: 'node12'
+  main: 'index.js'
