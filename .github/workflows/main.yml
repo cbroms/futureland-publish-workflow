@@ -10,5 +10,5 @@ jobs:
         uses: cbroms/futureland-publish-workflow@v0.0.1
         with:
           publish-to: ${{ secrets.FL_JOURNAL }}
-          publish-message: "test message"
+          publish-message: Pushed with message ${{ github.event.head_commit.message }}
           fl-credential: ${{ secrets.FL_TOKEN }}
