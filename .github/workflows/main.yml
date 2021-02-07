@@ -1,0 +1,14 @@
+on: [push]
+
+jobs:
+  publish-to-fl-job:
+    runs-on: ubuntu-latest
+    name: A job to publish the latest commit message to Futureland
+    steps:
+      - name: Publish to Futureland
+        id: fl-publish
+        uses: cbroms/futureland-publish-workflow@v0.0.1
+        with:
+          publish-to: ${{ secrets.FL_JOURNAL }}
+          publish-message: "test message"
+          fl-credential: ${{ secrets.FL_TOKEN }}
