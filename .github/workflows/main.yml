@@ -5,15 +5,13 @@ jobs:
     runs-on: ubuntu-latest
     name: A job to publish the latest commit message to Futureland
     # https://docs.github.com/en/rest/reference/repos#get-a-commit
+    # https://docs.github.com/en/actions/reference/environment-variables#default-environment-variables
     steps:
       - name: Get commit stats
-        id: commit-stats
+        id: get-commit-stats
         uses: octokit/request-action@v2.x
         with:
-          route: GET /repos/{owner}/{repo}/commits/{ref}
-          owner: cbroms
-          repo: futureland-publish-workflow
-          ref: ${{ github.event.head_commit.tree.sha }}
+          route: GET /repos/cbroms/futureland-publish-workflow/commits/$GITHUB_SHA
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish to Futureland
