@@ -4,20 +4,30 @@ jobs:
   publish-to-fl-job:
     runs-on: ubuntu-latest
     name: Publish the latest commit message to Futureland
-    # https://docs.github.com/en/rest/reference/repos#get-a-commit
-    # https://docs.github.com/en/actions/reference/environment-variables#default-environment-variables
     steps:
+      # First, get information about the last commit using the github API. For this I'm using request-action, which
+      # makes the request and sets it as an output, so I can use it later for the commit message
       - name: Get commit stats
         id: get-commit-stats
         uses: octokit/request-action@v2.x
         with:
+          # github.sha is from the github context, which provides information about the event that triggered the action
+          # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#github-context
+          # I'm getting some info about the latest commit, here's what the response should look like:
+          # https://docs.github.com/en/rest/reference/repos#get-a-commit
           route: GET /repos/cbroms/futureland-publish-workflow/commits/${{ github.sha }}
         env:
+          # the GITHUB_TOKEN prevents rate limiting and is passed in automatically, no need to add it to the repo's secrets
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # now I can run my action that publishes to Futureland, constructing a message to publish using the information
+        # I got from the API call above
       - name: Publish to Futureland
         id: fl-publish
         uses: cbroms/futureland-publish-workflow@v0.0.2
         with:
           publish-to: ${{ secrets.FL_JOURNAL }}
-          publish-message: ⬆️ Pushed commit "[${{ github.event.head_commit.message }}]"(${{ github.event.head_commit.url }}) (+${{fromJson(steps.get-commit-stats.outputs.data).stats.additions}} additions, -${{fromJson(steps.get-commit-stats.outputs.data).stats.deletions}} deletions)
+          # here I'm making the message, using both the github context as well as the output from the API call
+          # Note that to parse the output from the get-commit-stats step I have to use fromJson
+          # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#fromjson
+          publish-message: ⬆️ Pushed commit "[${{ github.event.head_commit.message }}](${{ github.event.head_commit.url }})" (+${{fromJson(steps.get-commit-stats.outputs.data).stats.additions}} insertions, -${{fromJson(steps.get-commit-stats.outputs.data).stats.deletions}} deletions)
           fl-credential: ${{ secrets.FL_TOKEN }}
