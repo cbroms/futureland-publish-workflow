@@ -3,7 +3,7 @@ on: [push]
 jobs:
   publish-to-fl-job:
     runs-on: ubuntu-latest
-    name: A job to publish the latest commit message to Futureland
+    name: Publish the latest commit message to Futureland
     # https://docs.github.com/en/rest/reference/repos#get-a-commit
     # https://docs.github.com/en/actions/reference/environment-variables#default-environment-variables
     steps:
@@ -11,7 +11,7 @@ jobs:
         id: get-commit-stats
         uses: octokit/request-action@v2.x
         with:
-          route: GET /repos/cbroms/futureland-publish-workflow/commits/${{GITHUB_SHA}}
+          route: GET /repos/cbroms/futureland-publish-workflow/commits/${{ env.GITHUB_SHA }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish to Futureland
