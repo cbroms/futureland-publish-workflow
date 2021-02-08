@@ -23,6 +23,7 @@ jobs:
         # I got from the API call above
       - name: Publish to Futureland
         id: fl-publish
+        if: ${{ fromJson(steps.get-commit-stats.outputs.data).commit.author.email == 'cb@christianbroms.com' }}
         uses: cbroms/futureland-publish-workflow@v0.0.2
         with:
           publish-to: ${{ secrets.FL_JOURNAL }}
