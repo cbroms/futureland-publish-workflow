@@ -11,7 +11,7 @@ jobs:
         id: get-commit-stats
         uses: octokit/request-action@v2.x
         with:
-          route: GET /repos/cbroms/futureland-publish-workflow/commits/$GITHUB_SHA
+          route: GET /repos/cbroms/futureland-publish-workflow/commits/${{GITHUB_SHA}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish to Futureland
